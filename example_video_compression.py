@@ -1,7 +1,10 @@
 import os
 import os.path
 from Katna.video import Video
+import time
+import ray
 
+@ray.remote
 def main():
 
     vd = Video()
@@ -34,4 +37,10 @@ def main():
     )
 
 if __name__ == "__main__":
-    main()
+    ray.init()
+    start_time = time.time()
+    obj_id = main.remote()
+    # main()
+    ray.get(obj_id)
+    print("Time taken = ", time.time() - start_time)
+    ray.shutdown()
